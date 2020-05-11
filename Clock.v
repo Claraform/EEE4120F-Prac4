@@ -8,6 +8,7 @@ module WallClock(
     input buttonMin,
     input buttonHrs,
     input buttonReset,
+    input [7:0] brightness,
 	//outputs - these will depend on your board's constraint files
     output [3:0] SegmentDrivers,
     output reg [5:0] LED,
@@ -34,35 +35,17 @@ module WallClock(
 	reg [3:0]minutes1=4'd0;
 	reg [3:0]minutes2=4'd0;
 	
-	// Registers for pwm
-	reg [3:0]pwmhrs1=4'd0;
-	reg [3:0]pwmhrs2=4'd0;
-	reg [3:0]pwmmins1=4'd0;
-	reg [3:0]pwmmins2=4'd0;
-	
-	wire pwm;
-	
+	// Speed of clock
 	parameter speed = 800000;
-	
-	// Display seconds on LEDs
-	//LED[5:0] = seconds[5:0];
     
-	//Initialize seven segment
-	// You will need to change some signals depending on you constraints
-	SS_Driver SS_Driver1(
-		CLK100MHZ, Reset,
-		hours2, hours1, minutes2, minutes1, // Use temporary test values before adding hours2, hours1, mins2, mins1
-		SegmentDrivers, SevenSegment
-	);
+	//Initialize seven segment with pwm
+	SS_Driver SS_pwm(CLK100MHZ, Reset, hours2, hours1, minutes2, minutes1, brightness, SegmentDrivers, SevenSegment);
 	
 	//The main logic
 	always @(posedge CLK100MHZ) begin
+        // Set LEDs to display seconds in binary format
 	   	LED[5:0] = seconds[5:0];
-		// Check if pwm signal high
-		if (pwm) begin
-		//pwm stuff
-		end
-		
+		//LED[7:0] = brightness[7:0];
 		// Check if minutes button pressed
 		if (MButton) begin
 		  minutes1 <= minutes1 + 1'b1;
