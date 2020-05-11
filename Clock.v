@@ -68,18 +68,6 @@ module WallClock(
 	           if (minutes2 == 4'd5) begin
 	               minutes1 <= 0;
 	               minutes2 <= 0;
-	               // Do hours
-	               if (hours1 == 4'd9) begin
-	                   hours1 <= 0;
-	                   hours2 <= hours2 + 1;
-	               end
-	               if (hours2 == 4'd2 && hours1 == 4'd3) begin
-	                   hours1 <= 0;
-	                   hours2 <= 0;
-	               end 
-	               else begin
-	                   hours1 <= hours1 + 1'b1;
-	               end
 	           end
 	           else begin
 	               // Increment minutes
