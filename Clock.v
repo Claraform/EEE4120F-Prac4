@@ -112,8 +112,15 @@ module WallClock(
 		
 		//Check if reset button pressed
 		if (Reset) begin
-		//logic
+		  hours1 <= 0;
+		  hours2 <= 0;
+		  minutes1 <= 0;
+		  minutes2 <= 0;
+		  Count <= 0;
+		  seconds <= 0;
 		end
+		
+		
 		// Increment counter
 		Count <= Count + 1'b1;
 		// Check if counter has reached maximum
