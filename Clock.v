@@ -45,7 +45,7 @@ module WallClock(
 	parameter speed = 800000;
 	
 	// Display seconds on LEDs
-	//LED = seconds;
+	//LED[5:0] = seconds[5:0];
     
 	//Initialize seven segment
 	// You will need to change some signals depending on you constraints
@@ -57,7 +57,7 @@ module WallClock(
 	
 	//The main logic
 	always @(posedge CLK100MHZ) begin
-	
+	   	LED[5:0] = seconds[5:0];
 		// Check if pwm signal high
 		if (pwm) begin
 		//pwm stuff
@@ -65,6 +65,7 @@ module WallClock(
 		
 		// Check if minutes button pressed
 		if (MButton) begin
+		  minutes1 <= minutes1 + 1'b1;
 		  // Check if minutes about to overflow
 	       if (minutes1 == 4'd9) begin
 	           // Check for overflow
@@ -78,26 +79,19 @@ module WallClock(
 	               minutes1 <= 0;
 	           end
 	       end 
-	       else begin
-	           // Increment minutes
-	           minutes1 <= minutes1 + 1'b1;
-	       end
 		end
 		
 		// Check if hours button pressed
 		if (HButton) begin
-		//logic
+		  hours1 <= hours1 + 1'b1;
 		// Do hours
 	       if (hours1 == 4'd9) begin
-	           hours1 <= 0;
 	           hours2 <= hours2 + 1'b1;
+	           hours1 <= 4'd0;
 	       end
-	       if (hours2 == 4'd2 && hours1 == 4'd3) begin
-	           hours1 <= 0;
-	           hours2 <= 0;
-	       end
-	       else begin
-	           hours1 <= hours1 + 1'b1;
+	       else if (hours2 == 4'd2 && hours1 == 4'd3) begin
+	           hours1 <= 4'd0;
+	           hours2 <= 4'd0;
 	       end
 		end
 		
@@ -123,36 +117,32 @@ module WallClock(
 	   end
 	   // Check if minutes should be incremented
 	   if (seconds == 60) begin
+	   	   // Increment minutes
+	       minutes1 <= minutes1 + 1'b1;
+	       // Reset seconds
+	       seconds <= 0;
 	       // Check if minutes about to overflow
 	       if (minutes1 == 4'd9) begin
 	           // Check for overflow
 	           if (minutes2 == 4'd5) begin
-	               minutes1 <= 0;
-	               minutes2 <= 0;
+	               minutes1 <= 4'd0;
+	               minutes2 <= 4'd0;
 	               // Do hours
+	               hours1 <= hours1 + 1'b1;
 	               if (hours1 == 4'd9) begin
-	                   hours1 <= 0;
+	                   hours1 <= 4'd0;
 	                   hours2 <= hours2 + 1'b1;
 	               end
 	               if (hours2 == 4'd2 && hours1 == 4'd3) begin
-	                   hours1 <= 0;
-	                   hours2 <= 0;
-	               end
-	               else begin
-	                   hours1 <= hours1 + 1'b1;
+	                   hours1 <= 4'd0;
+	                   hours2 <= 4'd0;
 	               end
 	           end
 	           else begin
 	               // Increment minutes
 	               minutes2 <= minutes2 + 1'b1;
-	               minutes1 <= 0;
+	               minutes1 <= 4'd0;
 	           end
-	       end
-	       else begin
-	       // Increment minutes
-	       minutes1 <= minutes1 + 1'b1;
-	       // Reset seconds
-	       seconds <= 0;
 	       end
 	end
 end
