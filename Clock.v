@@ -31,8 +31,8 @@ module WallClock(
 	reg [5:0]seconds=6'd0;
     reg [3:0]hours1=4'd0;
 	reg [3:0]hours2=4'd0;
-	reg [3:0]mins1=4'd0;
-	reg [3:0]mins2=4'd0;
+	reg [3:0]minutes1=4'd0;
+	reg [3:0]minutes2=4'd0;
 	
 	// Registers for pwm
 	reg [3:0]pwmhrs1=4'd0;
@@ -151,12 +151,6 @@ module WallClock(
 	       // Reset seconds
 	       seconds <= 0;
 	       end
-		
-		
-		
-		
-		
-		
-		
 	end
+end
 endmodule  
