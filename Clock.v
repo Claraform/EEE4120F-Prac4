@@ -33,6 +33,8 @@ module WallClock(
 	reg [3:0]hours2=4'd0;
 	reg [3:0]mins1=4'd0;
 	reg [3:0]mins2=4'd0;
+	
+	parameter speed = 800000;
     
 	//Initialize seven segment
 	// You will need to change some signals depending on you constraints
@@ -45,5 +47,54 @@ module WallClock(
 	//The main logic
 	always @(posedge CLK100MHZ) begin
 		// implement your logic here
+		// Increment counter
+		Count <= Count + 1'b1;
+		// Check if counter has reached maximum
+		if (Count == speed) begin
+		  // Reset counter
+		  Count <= 0;
+		  // Increment seconds
+		  seconds <= seconds + 1'b1;
+	   end
+	   // Check if minutes should be incremented
+	   if (seconds == 60) begin
+	       // Check if minutes about to overflow
+	       if (minutes1 == 4'd9) begin
+	           // Check for overflow
+	           if (minutes2 == 4'd5) begin
+	               minutes1 <= 0;
+	               minutes2 <= 0;
+	               // Do hours
+	               if (hours1 == 4'd9) begin
+	                   hours1 <= 0;
+	                   hours2 <= hours2 + 1;
+	               end
+	               if (hours2 == 4'd2 && hours1 == 4'd3) begin
+	                   hours1 <= 0;
+	                   hours2 <= 0;
+	               end
+	               else begin
+	                   hours1 <= hours1 + 1'b1;
+	               end
+	           end
+	           else begin
+	               // Increment minutes
+	               minutes2 <= minutes2 + 1'b1;
+	               minutes1 <= 0;
+	           end
+	       end
+	       else begin
+	       // Increment minutes
+	       minutes1 <= minutes1 + 1'b1;
+	       // Reset seconds
+	       seconds <= 0;
+	       end
+		
+		
+		
+		
+		
+		
+		
 	end
 endmodule  
