@@ -12,6 +12,7 @@ module WallClock(
 	//outputs - these will depend on your board's constraint files
     output [3:0] SegmentDrivers,
     output reg [5:0] LED,
+    output test,
     output [7:0] SevenSegment	
 );
 
@@ -36,10 +37,10 @@ module WallClock(
 	reg [3:0]minutes2=4'd0;
 	
 	// Speed of clock
-	parameter speed = 800000;
+	parameter speed = 78000000;
     
 	//Initialize seven segment with pwm
-	SS_Driver SS_pwm(CLK100MHZ, Reset, hours2, hours1, minutes2, minutes1, brightness, SegmentDrivers, SevenSegment);
+	SS_Driver SS_pwm(CLK100MHZ, Reset, hours2, hours1, minutes2, minutes1, brightness, SegmentDrivers, SevenSegment, test);
 	
 	//The main logic
 	always @(posedge CLK100MHZ) begin

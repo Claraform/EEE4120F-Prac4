@@ -3,9 +3,9 @@ module SS_Driver(
     input [3:0] BCD3, BCD2, BCD1, BCD0, // Binary-coded decimal input
     input [7:0] brightness,         // Brightness of LED display
     output reg [3:0] SegmentDrivers, // Digit drivers (active low)
-    output reg [7:0] SevenSegment // Segments (active low)
+    output reg [7:0] SevenSegment, // Segments (active low)
+    output reg l
 );
-
 
 // Make use of a subcircuit to decode the BCD to seven-segment (SS)
 wire [6:0]SS[3:0];
@@ -15,7 +15,7 @@ BCD_Decoder BCD_Decoder2 (BCD2, SS[2]);
 BCD_Decoder BCD_Decoder3 (BCD3, SS[3]);
 
 // PWM wire
-reg pwm;
+wire pwm;
 
 // Initialise PWM module
 PWM pwm_1(Clk, brightness, pwm);
@@ -32,6 +32,7 @@ end
 
 //------------------------------------------------------------------------------
 always @(*) begin // This describes a purely combinational circuit
+    l = pwm;
     SevenSegment[7] <= 1'b1; // Decimal point always off
     if (Reset) begin
         SevenSegment[6:0] <= 7'h7F; // All off during Reset
@@ -44,6 +45,8 @@ always @(*) begin // This describes a purely combinational circuit
                 4'h8 : SevenSegment[6:0] <= ~SS[3];
                 default: SevenSegment[6:0] <= 7'h7F;
             endcase
+        end else begin
+                SevenSegment[6:0] <= 7'h7F; // All off 
         end
     end
 end
